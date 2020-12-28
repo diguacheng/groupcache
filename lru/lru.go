@@ -23,6 +23,7 @@ import "container/list"
 type Cache struct {
 	// MaxEntries is the maximum number of cache entries before
 	// an item is evicted. Zero means no limit.
+	//缓存的最大条目数 0代表无限制 
 	MaxEntries int
 
 	// OnEvicted optionally specifies a callback function to be

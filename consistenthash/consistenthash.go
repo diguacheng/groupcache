@@ -23,13 +23,14 @@ import (
 	"strconv"
 )
 
+// 定义哈希算法 将[]byte映射为uint32型整数
 type Hash func(data []byte) uint32
 
 type Map struct {
 	hash     Hash
-	replicas int
-	keys     []int // Sorted
-	hashMap  map[int]string
+	replicas int  // 代表一个实际节点生成的虚拟节点的个数
+	keys     []int // Sorted  // 存储虚拟节点
+	hashMap  map[int]string // 存储虚拟节点对应的实际节点
 }
 
 func New(replicas int, fn Hash) *Map {
@@ -61,6 +62,7 @@ func (m *Map) Add(keys ...string) {
 	sort.Ints(m.keys)
 }
 
+// 寻找于Key最接近的点 先用二分搜索 得到最接近的虚拟节点 然后通过映射 得到真实的节点  
 // Get gets the closest item in the hash to the provided key.
 func (m *Map) Get(key string) string {
 	if m.IsEmpty() {

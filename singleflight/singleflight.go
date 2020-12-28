@@ -20,12 +20,25 @@ package singleflight
 
 import "sync"
 
+
+// 这个算法同一个函数（在很短的一段时间内）被调用多次 
+// 用call代表正在执行或者已经执行完的调用 
+//其中 wg 用于阻塞call2s（第一个调用后面的调用） 目的是这些call2s 不去执行 等待第一次调用的结果
+
+
 // call is an in-flight or completed Do call
 type call struct {
 	wg  sync.WaitGroup
 	val interface{}
 	err error
 }
+
+//Group 代表一组不同的调用组成的集合 
+// m 一个哈希表 存储了多个不同的正在执行的调用
+// mu 用于防止在高并发场景下 m被多次访问。
+//new（call）只能执行一次。用mu进行控制
+
+
 
 // Group represents a class of work and forms a namespace in which
 // units of work can be executed with duplicate suppression.
